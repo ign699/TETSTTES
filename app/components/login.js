@@ -1,21 +1,16 @@
 const fs = require('fs');
-const readline = require('readline');
 const {google} = require('googleapis');
-const web = require('./web');
-const Fs = require('fs')
 const Path = require('path')
-const Axios = require('axios')
-const uuidv1 = require('uuid/v1');
-const someObject = require('./credentials.json')
-const { remote : { app } } = require('electron')
+const someObject = require('./credentials.json');
+const { remote : { app } } = require('electron');
 
-let credentials;
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive'];
 const TOKEN_PATH = 'token.json';
 
 export const PATH = Path.join(app.getAppPath(), '..');
 
 export default () => new Promise((res, rej) => {
+  console.log(PATH)
   return res(authorize(someObject))
 });
 
@@ -25,9 +20,19 @@ function authorize(credentials) {
     const oAuth2Client = new google.auth.OAuth2(
       client_id, client_secret, redirect_uris[0]);
 
-    fs.readFile(Path.join(app.getAppPath(), '..', TOKEN_PATH), (err, token) => {
+    fs.readFile(Path.join(app.getAppPath(), '..', TOKEN_PATH), async (err, token) => {
       if (err) return rej(err);
       oAuth2Client.setCredentials(JSON.parse(token));
+
+      try{
+        await oAuth2Client.getTokenInfo(
+          oAuth2Client.credentials.access_token
+        );
+      } catch (e) {
+        rej()
+      }
+
+
       return res(oAuth2Client);
     });
   })
