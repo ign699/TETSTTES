@@ -258,7 +258,7 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.5.0",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "cheerio": "^1.0.0-rc.2",
     "devtron": "^1.4.0",
     "electron-debug": "^2.0.0",
